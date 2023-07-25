@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&family=Redressed&display=swap');
+.footer{
+    /* border: 1px  #CCC solid; */
+    position: relative;
+    z-index: 1000;
+    height: 2px;
+}
+
+.footer_copy{
+    display: block;
+    color: var(--text-color);
+    text-align: center;
+    font-size: 12px;
+}
+@media screen and (max-width:596px){
+    .footer{
+        width: 100%;
+    }
+    .footer{
+        /* border: 1px  #CCC solid; */
+        position: relative;
+        z-index: 1000;
+        height: 2px;
+    }
+
+}
