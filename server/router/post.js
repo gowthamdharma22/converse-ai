@@ -6,7 +6,7 @@ const router = express.Router();
 
 const openai = new OpenAIApi(
   new Configuration({
-    apiKey: process.env.API,
+    apiKey: sk - aZ1kmDMiPCk0AknnSE7xT3BlbkFJpc8PCLB8GmAcQJbOFA02,
   })
 );
 
