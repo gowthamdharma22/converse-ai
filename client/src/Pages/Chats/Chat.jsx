@@ -9,17 +9,20 @@ import Loading from "../../Components/Loading";
 
 function Chat() {
   const navigate = useNavigate();
-  const chatContainerRef = useRef(null);
   const themeButtonRef = useRef(null);
-  const textareaRef = useRef(null);
   const [trigger, setTrigger] = useState(false);
   const [toggle, setToggle] = useState(false);
   const [userText, setUserText] = useState("");
   const [reply, setReply] = useState([]);
   const [msg, setMsg] = useState([]);
   const [loading, setLoading] = useState(false);
-
   const userId = window.localStorage.getItem("userID");
+  const storedTheme = window.localStorage.getItem("themeColor");
+
+  useEffect(() => {
+    document.body.classList.toggle("light-mode", storedTheme === "light_mode");
+    setToggle(storedTheme === "light_mode");
+  }, [storedTheme]);
 
   const key = (e) => {
     if (e.keyCode === 13 || e.which === 13) {
@@ -34,7 +37,7 @@ function Chat() {
     }
     try {
       setLoading(true);
-      await axios.post("http://localhost:5000/post", {
+      await axios.post("https://converseai-server.onrender.com/post", {
         userId: userId,
         msg: userText,
       });
@@ -49,7 +52,9 @@ function Chat() {
   useEffect(() => {
     const fetch = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/post/${userId}`);
+        const res = await axios.get(
+          `https://converseai-server.onrender.com/post/${userId}`
+        );
         if (res.data.length !== 0) {
           setMsg(res.data[0].message);
           setReply(res.data[0].reply);
@@ -61,24 +66,13 @@ function Chat() {
     fetch();
   }, [trigger]);
 
-  useEffect(() => {
-    if (msg.length !== 0) {
-      chatContainerRef.current.scrollTo(
-        0,
-        chatContainerRef.current.scrollHeight
-      );
-    }
-  }, [reply]);
-
   const handleToggleTheme = () => {
     document.body.classList.toggle("light-mode");
-    localStorage.setItem(
-      "themeColor",
-      document.body.classList.contains("light-mode")
-        ? "light_mode"
-        : "dark_mode"
-    );
-    setToggle(!toggle);
+    const currentTheme = document.body.classList.contains("light-mode")
+      ? "light_mode"
+      : "dark_mode";
+    localStorage.setItem("themeColor", currentTheme);
+    setToggle(!toggle); // Update the toggle state
   };
 
   const handleDeleteChats = async () => {
@@ -86,18 +80,17 @@ function Chat() {
       setMsg([]);
       setReply([]);
       try {
-        await axios.delete(`http://localhost:5000/post/${userId}`);
-        toast.success(
-          "Deleted",
-          {
-            style: {
-              fontSize: "15px",
-            },
-          }
+        await axios.delete(
+          `https://converseai-server.onrender.com/post/${userId}`
         );
+        toast.success("Deleted", {
+          style: {
+            fontSize: "15px",
+          },
+        });
       } catch (error) {
         console.error(error);
-        toast.error("Nothing to delete",{
+        toast.error("Nothing to delete", {
           style: {
             fontSize: "15px",
           },
@@ -116,12 +109,6 @@ function Chat() {
     });
   };
 
-  const handleClick = () => {
-    if (textareaRef.current) {
-      textareaRef.current.focus(); // Focus the textarea when the button is clicked
-    }
-  };
-
   return (
     <>
       <div className="typing-container">
@@ -135,7 +122,6 @@ function Chat() {
               <i class="fa-solid fa-right-from-bracket"></i>
             </button>
             <textarea
-              ref={textareaRef}
               id="chat-input"
               spellCheck="false"
               placeholder="Enter a prompt here"
@@ -159,7 +145,7 @@ function Chat() {
               onClick={handleToggleTheme}
               ref={themeButtonRef}
             >
-              {!toggle ? (
+              {toggle ? (
                 <i class="fa-solid fa-moon"></i>
               ) : (
                 <i class="fa-solid fa-sun"></i>
@@ -250,7 +236,7 @@ function Chat() {
           </div>
         </div>
       ) : (
-        <div className="chat-container" ref={chatContainerRef}>
+        <div className="chat-container">
           {msg.map((message, index) => (
             <div key={index}>
               <div className="chat-content">

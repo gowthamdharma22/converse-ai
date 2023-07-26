@@ -19,26 +19,51 @@ main {
     display: flex;
     justify-content: center;
 }
-.per{
+
+.per {
     position: absolute;
     top: 55px;
 }
-.h1,.span {
-    color: white;
-    font-family: 'Chakra Petch', sans-serif;
-    font-size: 4rem;
-}
-input:focus::-webkit-input-placeholder { color:transparent; }
-input:focus:-moz-placeholder { color:transparent; } /* FF 4-18 */
-input:focus::-moz-placeholder { color:transparent; } /* FF 19+ */
-input:focus:-ms-input-placeholder { color:transparent; } /* IE 10+ */
 
-.span{
+.h1,
+.span {
+    color: #343541;
+    font-family: 'Chakra Petch', sans-serif;
+    text-align: center;
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+::placeholder{
+    font-size: 0.8rem;
+}
+
+input:focus::-webkit-input-placeholder {
+    color: transparent;
+}
+
+input:focus:-moz-placeholder {
+    color: transparent;
+}
+
+/* FF 4-18 */
+input:focus::-moz-placeholder {
+    color: transparent;
+}
+
+/* FF 19+ */
+input:focus:-ms-input-placeholder {
+    color: transparent;
+}
+
+/* IE 10+ */
+
+.span {
     color: #49dbfc;
     text-shadow: -1px -1px 0px black,
-    3px 3px 0px black,
-    6px 6px 0px #00000055;
+        3px 3px 0px black,
+        6px 6px 0px #00000055;
 }
+
 .container {
     position: absolute;
     top: 53%;
@@ -104,17 +129,17 @@ input:focus:-ms-input-placeholder { color:transparent; } /* IE 10+ */
 }
 
 .form input.button {
-    color: #fff;
-    background: var(--outgoing-chat-bg);
+    color: var(--text-color);
+    background: var(--incoming-chat-border);
     font-size: 1.2rem;
     font-weight: 500;
     letter-spacing: 1px;
     cursor: pointer;
-    transition: 0.4s;
+    transition: 0.1s;
 }
 
 .form input.button:hover {
-    background: var(--incoming-chat-bg);
+    font-size: 1.3rem;
 }
 
 .signup {
@@ -181,9 +206,11 @@ li {
     * {
         font-size: 85%;
     }
-    .per{
-        top:120px
+
+    .per {
+        top: 50px
     }
+
     body {
         min-height: 90vh;
         width: 100%;

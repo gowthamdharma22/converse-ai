@@ -4,7 +4,6 @@ import "../Chats/chat.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import Fade from "react-reveal/Fade";
 
 function Auth() {
   const [click, setClick] = React.useState(false);
@@ -16,13 +15,8 @@ function Auth() {
     }
   });
   return (
-    <Fade Big>
+    <>
       <main>
-        <div className="per">
-          <h1 className="h1">
-            Converse-<span className="span">AI</span>
-          </h1>
-        </div>
         <div className="container">
           <input type="checkbox" id="check" />
           <Login click={click} setClick={setClick} />
@@ -37,7 +31,7 @@ function Auth() {
           </div>
         </div>
       </main>
-    </Fade>
+    </>
   );
 }
 
@@ -48,23 +42,39 @@ function Login({ click, setClick }) {
   const [pass, setPass] = React.useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await axios.post("http://localhost:5000/auth/login", {
-        username: uname,
-        password: pass,
-      });
-      window.localStorage.setItem("userID", res.data.userID);
-      navigate("/home");
-      toast.success("Login successful!",{
+  const load = (isLoading) => {
+    if (isLoading) {
+      return toast.loading("Checking...", {
         style: {
           fontSize: "15px",
         },
       });
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const lt = load(true);
+    try {
+      const res = await axios.post(
+        "https://converseai-server.onrender.com/auth/login",
+        {
+          username: uname,
+          password: pass,
+        }
+      );
+      window.localStorage.setItem("userID", res.data.userID);
+      toast.dismiss(lt);
+      toast.success("Welcome Back!", {
+        style: {
+          fontSize: "15px",
+        },
+      });
+      navigate("/home");
     } catch (error) {
       console.log(error);
-      toast.error("Username or Password is incorecct!",{
+      toast.dismiss(lt);
+      toast.error("Username or Password is incorecct!", {
         style: {
           fontSize: "15px",
         },
@@ -77,7 +87,9 @@ function Login({ click, setClick }) {
       <div></div>
       {!click && (
         <div className="login form">
-          <header>Login</header>
+          <h1 className="h1">
+            Converse-<span className="span">AI</span>
+          </h1>
           <form onSubmit={handleSubmit}>
             <input
               type="text"
@@ -107,15 +119,30 @@ function Register({ click, setClick }) {
   const [cpass, setCpass] = React.useState("");
   const [error, setError] = React.useState(0);
 
+  const load = (isLoading) => {
+    if (isLoading) {
+      return toast.loading("Checking...", {
+        style: {
+          fontSize: "15px",
+        },
+      });
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (error === 0) {
+      const lt = load(true);
       try {
-        await axios.post("http://localhost:5000/auth/register", {
-          username: uname,
-          password: pass,
-        });
-        toast.success("Registered successfully!",{
+        await axios.post(
+          "https://converseai-server.onrender.com/auth/register",
+          {
+            username: uname,
+            password: pass,
+          }
+        );
+        toast.dismiss(lt);
+        toast.success("Registered!", {
           style: {
             fontSize: "15px",
           },
@@ -126,7 +153,8 @@ function Register({ click, setClick }) {
         setClick(false);
       } catch (error) {
         console.log(error);
-        toast.error("Username already exists!",{
+        toast.dismiss(lt);
+        toast.error("Username already exists!", {
           style: {
             fontSize: "15px",
           },
@@ -154,7 +182,9 @@ function Register({ click, setClick }) {
     <div className="lo">
       {click && (
         <div className="login form">
-          <header>Register</header>
+          <h1 className="h1">
+            Converse-<span className="span">AI</span>
+          </h1>
           <form onSubmit={handleSubmit}>
             <input
               type="text"
